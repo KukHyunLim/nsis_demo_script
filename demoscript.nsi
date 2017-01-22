@@ -1,11 +1,25 @@
+;1. static install path NWS plugins path
+;2. registry key add
+;3. install Content : FLMviewer(BUS)
+;4. uninstall
+;   delete FLM viewer file, registry
+;5. check Navisworks be installed
+
 ; The name of the installer
-Name "Example1"
+Name "FLM Viewer Installer"
 
 ; The file to write
-OutFile "example1.exe"
+OutFile "FLM Viewer Installer.exe"
 
-; The default installation directory
+
+;--------------------------------
+
+; Install path
+
 InstallDir $DESKTOP\Example1
+
+
+;--------------------------------
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel user
@@ -14,7 +28,8 @@ RequestExecutionLevel user
 
 ; Pages
 
-Page directory
+Page components
+;Page directory
 Page instfiles
 
 ;--------------------------------
