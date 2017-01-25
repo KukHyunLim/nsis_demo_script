@@ -1,71 +1,56 @@
-;0. check Navisworks be installed
-;1. static install path NWS plugins path
-;2. registry key add
-;3. install Content : FLMviewer(BUS)
-;4. uninstall
-;   delete FLM viewer file, registry
-
-
+!include 'LogicLib.nsh'
+ 
 ; The name of the installer
-Name "FLM Viewer Installer"
-
+Name "Example1"
 ; The file to write
-OutFile "FLM Viewer Installer.exe"
-
-
-;--------------------------------
-; 0. check NWS
-
-
-;--------------------------------
-
-;--------------------------------
-; 1. Install path
-
+OutFile "example1.exe"
+; The default installation directory
 InstallDir $DESKTOP\Example1
-;--------------------------------
-
-
-;--------------------------------
-; 2. 레지스트리를 만든다.
-; Registry key to check for directory (so if you install again, it will 
-; overwrite the old one automatically)
-;;InstallDirRegKey HKLM "Software\RegSvrHelpU" "Install_Dir"
-
-; UnInstall 관련 부분 및 재 설치 관련 레지스터리를 지운다.
-; Remove registry keys
-;;DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\RegSvrHelpU"
-;;DeleteRegKey HKLM SOFTWARE\RegSvrHelpU
-
-;;DeleteRegValue HKLM "Software\My Company\My Software" "some value"
-
 ; Request application privileges for Windows Vista
 RequestExecutionLevel user
-
-
 ;--------------------------------
 ; Pages
-
 Page components
-;Page directory
+Page directory
 Page instfiles
 ;--------------------------------
-
+ 
+ 
+Function .onInit
+    MessageBox MB_OK "hihihi"
+    ClearErrors
+	ReadRegStr $r0 HKCU "software\autodesk\navisworks manage x64\14.0\Mainwindow" "Placement"
+ 
+ 
+    detailPrint "message $R0"
+    StrLen $1 $r0
+    ${If} $1 > 0
+        MessageBox MB_OK "Welcome~!"
+    $(else)
+        MessageBox MB_OK "Please install Navisworks first"
+        Quit
+    $(endif)
+FunctionEnd
 ; The stuff to install
-Section "" ;No components page, name is not important
-
-  ; Set output path to the installation directory.
-  SetOutPath $INSTDIR
-  
-  ; 3. Put file there
-  File demoscript.nsi
+Section "install" ;No components page, name is not important
+ 
+; Set output path to the installation directory.
+SetOutPath $INSTDIR
+ 
+; Put file there
+File script.nsi
+; if default value, key name is empty
+WriteRegStr HKCR "registrypath" "value name" "value value"
+WriteRegStr HKCR "registrypath" "" "value value"
  
 SectionEnd ; end the section
-
-; 4. Uninstall
-;;Section "Uninstall"
-  ;;Delete $INSTDIR\Uninst.exe ; delete self (see explanation below why this works)
-  ;;Delete $INSTDIR\myApp.exe
-  ;;RMDir $INSTDIR
-  ;;DeleteRegKey HKLM SOFTWARE\myApp
-;;SectionEnd
+ 
+;Uninstall section
+Section "uninstall"
+    Delete $INSTDIR\uninstaller.exe
+    Delete $INSTDIR\file1.exe
+    RMDIR $INSTDIR
+ 
+    DeleteRegKey $INSTDIR HKLM "path"
+    DeleteRegValue HKLM "path" "value name"
+SectionEnd
